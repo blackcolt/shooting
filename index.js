@@ -5,38 +5,32 @@ const quizEl = document.getElementById('quiz');
 
 const OPTIONS = ['ירי תקין', 'להב נמוך', 'להב גבוה', 'אצבע על ההדק בפנים', 'אצבע על ההדק בחוץ', 'יד חלשה מושכת נגדית', 'יד חלשה דוחפת', 'היורה מפיל',];
 
-let shots = [];
-let dims = {width: 0, height: 0};
-let current = 0;
+let shots = [], dims = {width: 0, height: 0}, current = 0;
 
 function clearDots() {
     target.querySelectorAll('.dot').forEach(el => el.remove());
 }
 
-// לוגיקה מצטברת לפי הכללים שסיכמנו
 function classifyShot(x, y, width, height) {
     const centerX = width / 2, centerY = height / 2;
     const crossThickness = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cross-thickness')) || 24;
     const dotSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--circle-size')) || 18;
-    const validDistance = 3 * dotSize;   // ירי תקין עד 3 קטרים רדיאלית
-    const tiltThreshold = 4 * dotSize;   // נטייה אם סטייה אופקית > 4 קטרים
+    const validDistance = 3 * dotSize;
+    const tiltThreshold = 4 * dotSize;
 
-    const dx = x - centerX;   // + ימינה
-    const dy = y - centerY;   // + למטה (נמוך)
+    const dx = x - centerX;
+    const dy = y - centerY;
 
-    const withinHorizontalBand = Math.abs(dy) <= crossThickness / 2; // לנטייה חייב להיות בתחום רוחב האיקס
+    const withinHorizontalBand = Math.abs(dy) <= crossThickness / 2;
 
     const answers = new Set();
 
-    // ירי תקין אם על הפלוס או ברדיוס תקין
     const radialDist = Math.hypot(dx, dy);
     const onCross = (Math.abs(dx) <= crossThickness / 2 && Math.abs(dy) <= crossThickness / 2);
     if (onCross || radialDist <= validDistance) {
         answers.add('ירי תקין');
         return Array.from(answers);
     }
-
-    // נמוך/גבוה (לא מגבילים לרצועה אנכית כדי לא לאבד מקרים אלכסוניים)
     if (dy > crossThickness / 2) {
         answers.add('היורה מפיל');
         answers.add('להב נמוך');
@@ -44,7 +38,6 @@ function classifyShot(x, y, width, height) {
     if (dy < -crossThickness / 2) {
         answers.add('להב גבוה');
     }
-    // נטייה שמאלה/ימינה — רק אם בתוך רוחב האיקס וגם מעבר לסף 4× קוטר אופקי
     if (withinHorizontalBand && Math.abs(dx) > tiltThreshold) {
         if (dx > 0) answers.add('אצבע על ההדק בפנים');
         if (dx < 0) answers.add('אצבע על ההדק בחוץ');
@@ -92,7 +85,6 @@ function renderCurrentQuestion() {
     quizEl.innerHTML = `<h2 style="margin:0">חידון: שאלה ${i + 1}</h2>` + buildSingleQuestionHTML(i, correct);
     highlightDot(i, true);
 
-    // כפתורים
     document.getElementById('checkBtn').onclick = () => {
         const q = quizEl.querySelector(`.q[data-idx="${i}"]`);
         const resEl = q.querySelector(`#res_${i}`);
@@ -145,13 +137,13 @@ function createRandomDots(count = 10) {
         dot.dataset.idx = i.toString();
 
         let x, y;
-        if (Math.random() < 0.5) {// מקבץ סביב המרכז
+        if (Math.random() < 0.5) {
             const clusterRadius = width * 0.15;
             const angle = Math.random() * Math.PI * 2;
             const r = Math.random() * clusterRadius;
             x = centerX + r * Math.cos(angle);
             y = centerY + r * Math.sin(angle);
-        } else {// פיזור כללי
+        } else {
             x = Math.random() * (width - 2 * radius) + radius;
             y = Math.random() * (height - 2 * radius) + radius;
         }
