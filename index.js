@@ -16,33 +16,28 @@ function classifyShot(x, y, width, height) {
     const crossThickness = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--cross-thickness')) || 24;
     const dotSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--circle-size')) || 18;
 
-    const validDistance = 3 * dotSize;     // ירי תקין עד 3 קטרים
-    const tiltThreshold = 4 * dotSize;     // נטייה החל מ-4 קטרים (כולל)
+    const validDistance = 3 * dotSize;
+    const tiltThreshold = 3 * dotSize;
 
     const dx = x - centerX;
     const dy = y - centerY;
 
     const answers = new Set();
 
-    // ירי תקין אם על הפלוס או בתוך רדיוס תקין
     const radialDist = Math.hypot(dx, dy);
     const onCross = (Math.abs(dx) <= crossThickness/2 && Math.abs(dy) <= crossThickness/2);
     if (onCross || radialDist <= validDistance) {
         answers.add('ירי תקין');
         return Array.from(answers);
     }
-
-    // נמוך/גבוה (מצטבר)
     if (dy >  crossThickness / 2) { answers.add('היורה מפיל'); answers.add('להב נמוך'); }
     if (dy < -crossThickness / 2) { answers.add('להב גבוה'); }
 
-    // ✅ נטייה לפי סטייה אופקית בלבד (בלי רצועה אופקית)
-    const EPS = 0.01; // היס קטן לדיוק גבול
+    const EPS = 0.01;
     if (Math.abs(dx) + EPS >= tiltThreshold) {
-        if (dx > 0) answers.add('אצבע על ההדק בפנים');  // ימינה
-        else        answers.add('אצבע על ההדק בחוץ');   // שמאלה
+        if (dx > 0) answers.add('אצבע על ההדק בפנים');
+        else        answers.add('אצבע על ההדק בחוץ');
     }
-
     return Array.from(answers);
 }
 
@@ -154,7 +149,6 @@ function createRandomDots(count = 10) {
         target.appendChild(dot);
         shots.push({x, y});
     }
-
     renderCurrentQuestion();
 }
 
