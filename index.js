@@ -51,7 +51,7 @@ function buildSingleQuestionHTML(i, correct) {
     const answersMarkup = OPTIONS.map(checkbox).join('');
     return `
     <div class="q" data-idx="${i}" data-correct='${JSON.stringify(correct)}'>
-      <h3>שאלה ${i + 1} מתוך 10: סמן את הסיבות לפגיעה עבור עיגול #${i + 1}</h3>
+      <h3>שאלה ${i + 1} מתוך 10: סמן את הסיבות לפגיעה עבור העיגול המסומן באדום #${i + 1}</h3>
       <div class="answers">${answersMarkup}</div>
       <footer>
         <span class="hint">העיגול הרלוונטי מסומן באדום על המטרה.</span>
