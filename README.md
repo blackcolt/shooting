@@ -11,3 +11,4 @@ It’s designed for **shooting instructors, trainees, and enthusiasts** who want
 - 🧩 **Cumulative Logic** – A single shot can have multiple possible explanations (e.g., *High Grip + Finger Outside Trigger*).
 
 Perfect as a **training aid** in shooting courses, or as a fun way to test yourself and colleagues.
+
